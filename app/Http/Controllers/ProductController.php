@@ -40,4 +40,14 @@ class ProductController extends Controller
             return redirect()->back()->with('error', 'Failed to create product: ' . $e->getMessage());
         }
     }
+
+    public function destroy(Product $product)
+    {
+        try {
+            $product->delete();
+            return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to delete product: ' . $e->getMessage());
+        }
+    }
 }

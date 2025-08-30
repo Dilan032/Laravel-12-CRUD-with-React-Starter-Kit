@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import products from '@/routes/products';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { SquareCheckBig, CircleAlert } from 'lucide-react';
 
@@ -25,6 +25,13 @@ interface product{
 export default function index() {
 
     const { product, flash } = usePage<{ flash: { success?: string; error?: string }, product: product[] }>().props;
+    const { processing, delete: destroy } = useForm();
+
+    // product delete fuction
+    const handleDelete =(id: number, name: string) =>{
+        if (confirm(`Are you sure you want to delete the product: ${name}?`)) {
+            destroy(products.destroy.url(id));
+    }}
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -60,21 +67,25 @@ export default function index() {
                 <table className="min-w-full border border-gray-300">
                     <thead className="bg-gray-100">
                     <tr>
-                        <th className="border px-4 py-2 text-left">ID</th>
-                        <th className="border px-4 py-2 text-left">Name</th>
-                        <th className="border px-4 py-2 text-left">Price</th>
-                        <th className="border px-4 py-2 text-left">Description</th>
-                        <th className="border px-4 py-2 text-left">Created At</th>
+                        <th className="border px-4 py-2 text-center">ID</th>
+                        <th className="border px-4 py-2 text-center">Name</th>
+                        <th className="border px-4 py-2 text-center">Price</th>
+                        <th className="border px-4 py-2 text-center">Description</th>
+                        <th className="border px-4 py-2 text-center">Created At</th>
+                        <th className="border px-4 py-2 text-center">Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     {product.map((p: product) => (
                         <tr key={p.id}>
-                            <td className="border px-4 py-2">{p.id}</td>
-                            <td className="border px-4 py-2">{p.name}</td>
-                            <td className="border px-4 py-2">Rs. {p.price}</td>
-                            <td className="border px-4 py-2">{p.description}</td>
-                            <td className="border px-4 py-2">{new Date(p.created_at).toLocaleDateString()}</td>
+                            <td className="border px-4 py-2 text-center">{p.id}</td>
+                            <td className="border px-4 py-2 text-center">{p.name}</td>
+                            <td className="border px-4 py-2 text-center">Rs. {p.price}</td>
+                            <td className="border px-4 py-2 text-center">{p.description}</td>
+                            <td className="border px-4 py-2 text-center">{new Date(p.created_at).toLocaleDateString()}</td>
+                            <td className="border px-4 py-2 text-center">
+                                <Button disabled={processing} onClick={()=> handleDelete(p.id, p.name)} className='bg-red-500 hover:bg-red-700 cursor-pointer'>Delete</Button>
+                            </td>
                         </tr>
                     ))}
                     </tbody>
