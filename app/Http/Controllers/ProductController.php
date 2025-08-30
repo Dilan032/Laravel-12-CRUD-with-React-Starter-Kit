@@ -41,6 +41,30 @@ class ProductController extends Controller
         }
     }
 
+    public function edit(Product $product)
+    {
+        return Inertia::render('products/Edit', compact('product'));
+    }
+
+    public function update(Request $request, Product $product)
+    {
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'price' => 'required|numeric',
+                'description' => 'nullable|string',
+            ]);
+
+            $product->update($request->all());
+            return redirect()->route('products.index')->with('success', 'Product updated successfully.');
+        
+        } catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to update product: ' . $e->getMessage());
+        }
+    }
+
     public function destroy(Product $product)
     {
         try {

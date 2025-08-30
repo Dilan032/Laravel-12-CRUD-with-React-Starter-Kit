@@ -83,7 +83,8 @@ export default function index() {
                             <td className="border px-4 py-2 text-center">Rs. {p.price}</td>
                             <td className="border px-4 py-2 text-center">{p.description}</td>
                             <td className="border px-4 py-2 text-center">{new Date(p.created_at).toLocaleDateString()}</td>
-                            <td className="border px-4 py-2 text-center">
+                            <td className="border px-4 py-2 text-center space-x-2">
+                                <Link href={products.edit.url(p.id)}><Button className='bg-slate-500 hover:bg-slate-700 cursor-pointer'>Edit</Button></Link>
                                 <Button disabled={processing} onClick={()=> handleDelete(p.id, p.name)} className='bg-red-500 hover:bg-red-700 cursor-pointer'>Delete</Button>
                             </td>
                         </tr>
